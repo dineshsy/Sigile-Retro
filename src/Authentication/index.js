@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import SignIn from './SignIn/SignIn';
 import SignUp from './SignUp/SignUp';
 
 const AuthenticationWrapper = styled.section`
@@ -39,14 +40,14 @@ const AuthenticationWrapper = styled.section`
   }
 `;
 
-export const Authentication = () => {
+export const Authentication = ({ isSignup }) => {
   return (
     <AuthenticationWrapper>
       <div className="title-wrapper">
         <h1 className="title">Sigile Retro</h1>
         <h3 className="title">Agile made simple & fun</h3>
       </div>
-      <SignUp />
+      {isSignup ? <SignUp /> : <SignIn />}
     </AuthenticationWrapper>
   );
 };

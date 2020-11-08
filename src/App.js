@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationBar } from './Reusables/Interactive/NavigationBar/NavigationBar';
 import { Authentication } from './Authentication';
 import styled from 'styled-components';
@@ -15,11 +15,15 @@ const MainWrapper = styled.div`
   }
 `;
 function App() {
+  const [isSignup, setIsSignup] = useState(true);
   return (
     <MainWrapper>
-      <NavigationBar />
+      <NavigationBar
+        handleLoginClick={() => setIsSignup(false)}
+        handleSignUpClick={() => setIsSignup(true)}
+      />
       <main>
-        <Authentication />
+        <Authentication isSignup={isSignup} />
       </main>
     </MainWrapper>
   );

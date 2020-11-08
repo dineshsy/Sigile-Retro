@@ -42,7 +42,10 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-export const NavigationBar = () => {
+export const NavigationBar = ({
+  handleLoginClick,
+  handleSignUpClick,
+}) => {
   const classes = useStyles();
   const [auth, setAuth] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -109,6 +112,10 @@ export const NavigationBar = () => {
           <div>
             {['Signup', 'Login'].map((item, i) => (
               <Button
+                onClick={() => {
+                  if (i === 0) handleSignUpClick();
+                  else handleLoginClick();
+                }}
                 className={
                   i === 0
                     ? [classes.menuButton, classes.fontStyle].join(

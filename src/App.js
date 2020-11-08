@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { NavigationBar } from './Reusables/Interactive/NavigationBar/NavigationBar';
+import { NavigationBar } from './Reusables/Interactive/NavigationBar';
 import { Authentication } from './Authentication';
 import styled from 'styled-components';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { Dashboard } from './Dashboard/Dashboard';
 
 const MainWrapper = styled.div`
   display: flex;
@@ -23,7 +25,15 @@ function App() {
         handleSignUpClick={() => setIsSignup(true)}
       />
       <main>
-        <Authentication isSignup={isSignup} />
+        <Switch>
+          <Route path="/board">
+            <Dashboard />
+          </Route>
+          <Route path="/" exact>
+            <Authentication isSignup={isSignup} />
+          </Route>
+          <Redirect to="/" />
+        </Switch>
       </main>
     </MainWrapper>
   );

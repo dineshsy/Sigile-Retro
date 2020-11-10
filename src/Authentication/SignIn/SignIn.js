@@ -14,6 +14,8 @@ import GoogleIcon from '../../Assets/SocialIcons/google.png';
 import FacebookIcon from '../../Assets/SocialIcons/facebook.png';
 import { userLogIn } from '../../redux/actions/authentication';
 import { connect } from 'react-redux';
+import { IconButton, InputAdornment } from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,11 +60,19 @@ export default connect(
     email: '',
     password: '',
   });
-
+  const [showPassword, setShowPassword] = useState(false);
   const handleTextFieldChange = (e) => {
     const updatedUserDetails = { ...userDetails };
     updatedUserDetails[e.target.name] = e.target.value;
     setUserDetails(updatedUserDetails);
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword((visibility) => !visibility);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
   };
 
   const handleFormSubmit = (e) => {
@@ -102,10 +112,27 @@ export default connect(
                   fullWidth
                   name="password"
                   label="Password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   id="password"
                   autoComplete="current-password"
                   onChange={handleTextFieldChange}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showPassword ? (
+                            <Visibility />
+                          ) : (
+                            <VisibilityOff />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
             </Grid>

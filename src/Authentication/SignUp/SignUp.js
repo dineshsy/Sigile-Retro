@@ -16,6 +16,9 @@ import GoogleIcon from '../../Assets/SocialIcons/google.png';
 import FacebookIcon from '../../Assets/SocialIcons/facebook.png';
 import { connect } from 'react-redux';
 import { userSignUp } from '../../redux/actions/authentication';
+import { IconButton, InputAdornment } from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(2),
@@ -59,6 +62,16 @@ export default connect(
     email: '',
     password: '',
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword((visibility) => !visibility);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const handleTextFieldChange = (e) => {
     const updatedUserDetails = { ...userDetails };
@@ -115,10 +128,27 @@ export default connect(
                   fullWidth
                   name="password"
                   label="Password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   id="password"
                   autoComplete="current-password"
                   onChange={handleTextFieldChange}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showPassword ? (
+                            <Visibility />
+                          ) : (
+                            <VisibilityOff />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>

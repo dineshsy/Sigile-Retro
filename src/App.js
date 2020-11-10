@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationBar } from './Reusables/Interactive/NavigationBar';
 import { Authentication } from './Authentication';
 import styled from 'styled-components';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Dashboard } from './Dashboard/Dashboard';
+import { auth } from './utils/firebase';
 
 const MainWrapper = styled.div`
   display: flex;
@@ -18,6 +19,16 @@ const MainWrapper = styled.div`
 `;
 function App() {
   const [isSignup, setIsSignup] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      // setCurrentUser(user);
+      // setLoading(false);
+      console.log(user);
+    });
+
+    return unsubscribe;
+  }, []);
   return (
     <MainWrapper>
       <NavigationBar

@@ -47,7 +47,7 @@ export const NavigationBar = ({
   handleSignUpClick,
 }) => {
   const classes = useStyles();
-  const auth = true;
+  const auth = false;
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const open = Boolean(anchorEl);

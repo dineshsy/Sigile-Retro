@@ -34,8 +34,6 @@ function App({ user, userLoaded, loadUser }) {
       userLoaded(user);
       if (user) {
         history.push('/board');
-      } else {
-        history.replace('/');
       }
     });
 

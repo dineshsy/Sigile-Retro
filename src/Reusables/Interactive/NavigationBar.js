@@ -79,7 +79,7 @@ export const NavigationBar = connect(
           variant="h6"
           className={classes.title}
         ></Typography>
-        {state.user ? (
+        {state.auth.user ? (
           <div>
             <IconButton
               aria-label="account of current user"

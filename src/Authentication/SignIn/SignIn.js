@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,8 @@ import Card from '@material-ui/core/Card';
 import MicrosoftIcon from '../../Assets/SocialIcons/microsoft.png';
 import GoogleIcon from '../../Assets/SocialIcons/google.png';
 import FacebookIcon from '../../Assets/SocialIcons/facebook.png';
+import { userLogIn } from '../../redux/actions/authentication';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,10 +41,34 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start',
   },
 }));
+const mapStateToProps = (state) => ({
+  isLoading: state.auth.isLoading,
+});
 
-export default function SignIn() {
+const mapDispatchToProps = {
+  userLogIn,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(function SignIn({ isLoading, userLogIn }) {
   const classes = useStyles();
+  const [userDetails, setUserDetails] = useState({
+    email: '',
+    password: '',
+  });
 
+  const handleTextFieldChange = (e) => {
+    const updatedUserDetails = { ...userDetails };
+    updatedUserDetails[e.target.name] = e.target.value;
+    setUserDetails(updatedUserDetails);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    userLogIn(userDetails.email, userDetails.password);
+  };
   return (
     <Card className={classes.root}>
       <Container id="sign-in" component="main" maxWidth="xs">
@@ -54,7 +80,7 @@ export default function SignIn() {
           <Typography component="h3" variant="h5">
             Log In
           </Typography>
-          <form className={classes.form}>
+          <form className={classes.form} onSubmit={handleFormSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -66,6 +92,7 @@ export default function SignIn() {
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  onChange={handleTextFieldChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -78,6 +105,7 @@ export default function SignIn() {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  onChange={handleTextFieldChange}
                 />
               </Grid>
             </Grid>
@@ -88,6 +116,7 @@ export default function SignIn() {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
+                  disabled={isLoading}
                 >
                   Login
                 </Button>
@@ -136,4 +165,4 @@ export default function SignIn() {
       </Container>
     </Card>
   );
-}
+});

@@ -21,10 +21,21 @@ export const userSignUp = (email, password) => async (dispatch) => {
   }
 };
 
+export const userLogIn = (email, password) => async (dispatch) => {
+  dispatch({ type: authActionTypes.AUTH_LOADING });
+  try {
+    await _auth.login(email, password);
+  } catch (e) {
+    console.log(e);
+    dispatch({ type: authActionTypes.LOGIN_FAIL });
+  }
+};
+
 export const userLogOut = () => async (dispatch) => {
   dispatch({ type: authActionTypes.AUTH_LOADING });
   try {
     await _auth.logout();
+    // To reset all localStates
     window.location.reload();
   } catch (e) {
     console.log(e);

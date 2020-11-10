@@ -11,7 +11,7 @@ import {
 import { Dashboard } from './Dashboard/Dashboard';
 import { auth } from './utils/firebase';
 import { connect } from 'react-redux';
-import { userLoaded } from './redux/actions/authentication';
+import { userLoaded, loadUser } from './redux/actions/authentication';
 
 const MainWrapper = styled.div`
   display: flex;
@@ -24,15 +24,18 @@ const MainWrapper = styled.div`
     flex: 1;
   }
 `;
-function App({ isLoading, user, userLoaded }) {
+function App({ user, userLoaded, loadUser }) {
   const [isSignup, setIsSignup] = useState(true);
   const history = useHistory();
 
   useEffect(() => {
+    loadUser();
     const unsubscribe = auth.onAuthStateChanged((user) => {
       userLoaded(user);
       if (user) {
         history.push('/board');
+      } else {
+        history.replace('/');
       }
     });
 
@@ -62,12 +65,12 @@ function App({ isLoading, user, userLoaded }) {
 }
 
 const mapStateToProps = (state) => ({
-  isLoading: state.auth.isLoading,
   user: state.auth.user,
 });
 
 const mapDispatchToProps = {
   userLoaded,
+  loadUser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

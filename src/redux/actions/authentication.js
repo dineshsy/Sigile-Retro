@@ -20,3 +20,14 @@ export const userSignUp = (email, password) => async (dispatch) => {
     dispatch({ type: authActionTypes.SIGNUP_FAIL });
   }
 };
+
+export const userLogOut = () => async (dispatch) => {
+  dispatch({ type: authActionTypes.AUTH_LOADING });
+  try {
+    await _auth.logout();
+    window.location.reload();
+  } catch (e) {
+    console.log(e);
+    dispatch({ type: authActionTypes.LOGOUT_FAIL });
+  }
+};

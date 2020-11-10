@@ -22,6 +22,7 @@ const authReducer = (state = INITIAL_STATE, action) => {
       };
     case authActionTypes.SIGNUP_FAIL:
     case authActionTypes.LOGIN_FAIL:
+    case authActionTypes.LOGOUT_FAIL:
       return {
         ...state,
         user: null,

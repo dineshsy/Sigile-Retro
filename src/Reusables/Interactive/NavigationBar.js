@@ -15,7 +15,8 @@ import {
   ListItemText,
   withStyles,
 } from '@material-ui/core';
-
+import { useStore, connect } from 'react-redux';
+import { userLogOut } from '../../redux/actions/authentication';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -42,14 +43,18 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-export const NavigationBar = ({
-  handleLoginClick,
-  handleSignUpClick,
-}) => {
-  const classes = useStyles();
-  const auth = false;
-  const [anchorEl, setAnchorEl] = React.useState(null);
+const mapDispatchToProps = {
+  userLogOut,
+};
 
+export const NavigationBar = connect(
+  null,
+  mapDispatchToProps,
+)(({ handleLoginClick, handleSignUpClick, userLogOut }) => {
+  const classes = useStyles();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const state = useStore().getState();
   const open = Boolean(anchorEl);
 
   const handleMenu = (event) => {
@@ -74,7 +79,7 @@ export const NavigationBar = ({
           variant="h6"
           className={classes.title}
         ></Typography>
-        {auth ? (
+        {state.user ? (
           <div>
             <IconButton
               aria-label="account of current user"
@@ -100,7 +105,7 @@ export const NavigationBar = ({
               open={open}
               onClose={handleClose}
             >
-              <StyledMenuItem>
+              <StyledMenuItem onClick={() => userLogOut()}>
                 <ListItemIcon>
                   <LogoutIcon fontSize="small" />
                 </ListItemIcon>
@@ -134,4 +139,4 @@ export const NavigationBar = ({
       </Toolbar>
     </AppBar>
   );
-};
+});

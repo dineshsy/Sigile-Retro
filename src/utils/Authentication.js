@@ -1,4 +1,4 @@
-import { auth } from '../firebase';
+import { auth } from './firebase';
 
 class Authentication {
   signup(email, password) {
@@ -13,3 +13,5 @@ class Authentication {
     return auth.signOut();
   }
 }
+
+export default Authentication;

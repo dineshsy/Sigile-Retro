@@ -13,10 +13,6 @@ const authReducer = (state = INITIAL_STATE, action) => {
         isLoading: true,
       };
     case authActionTypes.USER_LOADED:
-      return {
-        ...state,
-        user: action.payload,
-      };
     case authActionTypes.SIGNUP_SUCCESS:
     case authActionTypes.LOGIN_SUCCESS:
       return {

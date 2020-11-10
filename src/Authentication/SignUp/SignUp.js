@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,7 +14,8 @@ import Card from '@material-ui/core/Card';
 import MicrosoftIcon from '../../Assets/SocialIcons/microsoft.png';
 import GoogleIcon from '../../Assets/SocialIcons/google.png';
 import FacebookIcon from '../../Assets/SocialIcons/facebook.png';
-
+import { connect } from 'react-redux';
+import { userSignUp } from '../../redux/actions/authentication';
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(2),
@@ -41,10 +42,34 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start',
   },
 }));
+const mapStateToProps = (state) => ({
+  isLoading: state.auth.isLoading,
+});
 
-export default function SignUp() {
+const mapDispatchToProps = {
+  userSignUp,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(function SignUp({ isLoading, userSignUp }) {
   const classes = useStyles();
+  const [userDetails, setUserDetails] = useState({
+    email: '',
+    password: '',
+  });
 
+  const handleTextFieldChange = (e) => {
+    const updatedUserDetails = { ...userDetails };
+    updatedUserDetails[e.target.name] = e.target.value;
+    setUserDetails(updatedUserDetails);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    userSignUp(userDetails.email, userDetails.password);
+  };
   return (
     <Card className={classes.root}>
       <Container id="sign-up" component="main" maxWidth="xs">
@@ -56,7 +81,7 @@ export default function SignUp() {
           <Typography component="h3" variant="h5">
             Sign up
           </Typography>
-          <form className={classes.form}>
+          <form className={classes.form} onSubmit={handleFormSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -80,6 +105,7 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={handleTextFieldChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -92,6 +118,7 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  onChange={handleTextFieldChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -113,6 +140,7 @@ export default function SignUp() {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
+                  disabled={isLoading}
                 >
                   Sign Up
                 </Button>
@@ -161,4 +189,4 @@ export default function SignUp() {
       </Container>
     </Card>
   );
-}
+});

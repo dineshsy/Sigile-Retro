@@ -2,9 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { NavigationBar } from './Reusables/Interactive/NavigationBar';
 import { Authentication } from './Authentication';
 import styled from 'styled-components';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  Switch,
+  useHistory,
+} from 'react-router-dom';
 import { Dashboard } from './Dashboard/Dashboard';
 import { auth } from './utils/firebase';
+import { connect } from 'react-redux';
+import { userLoaded } from './redux/actions/authentication';
 
 const MainWrapper = styled.div`
   display: flex;
@@ -17,14 +24,16 @@ const MainWrapper = styled.div`
     flex: 1;
   }
 `;
-function App() {
+function App({ isLoading, user, userLoaded }) {
   const [isSignup, setIsSignup] = useState(true);
+  const history = useHistory();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      // setCurrentUser(user);
-      // setLoading(false);
-      console.log(user);
+      userLoaded(user);
+      if (user) {
+        history.push('/board');
+      }
     });
 
     return unsubscribe;
@@ -37,9 +46,11 @@ function App() {
       />
       <main>
         <Switch>
-          <Route path="/board">
-            <Dashboard />
-          </Route>
+          {user ? (
+            <Route path="/board">
+              <Dashboard />
+            </Route>
+          ) : null}
           <Route path="/" exact>
             <Authentication isSignup={isSignup} />
           </Route>
@@ -50,4 +61,13 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  isLoading: state.auth.isLoading,
+  user: state.auth.user,
+});
+
+const mapDispatchToProps = {
+  userLoaded,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

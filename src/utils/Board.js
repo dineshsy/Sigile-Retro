@@ -49,7 +49,14 @@ class Board {
 
   toggleLike(listID, cardID) {}
 
-  deleteCard(listID, cardID) {}
+  async deleteCard(listID, cardID) {
+    return await firestore
+      .collection(this.boradName)
+      .doc(listID)
+      .collection('cards')
+      .doc(cardID)
+      .delete();
+  }
 }
 
 export default Board;

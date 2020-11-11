@@ -15,18 +15,24 @@ const ListWrapper = styled.div`
   gap: 8px;
   margin-top: 2rem;
 `;
+
+const mapStateToProps = (state) => ({
+  isLoading: state.board.isLoading,
+});
+
 const mapDispatchToProps = {
   addNewCard,
 };
 
 export const List = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
-)(({ title, cards, addNewCard, id }) => {
+)(({ title, cards, addNewCard, id, isLoading }) => {
   return (
     <ListWrapper>
       <IconTitle title={title} icon={<EditIcon fontSize="small" />} />
       <IconButton
+        disabled={isLoading}
         aria-label={`add a new card`}
         onClick={() => addNewCard(id)}
         color="primary"

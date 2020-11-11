@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   lists: null,
   isLoading: false,
   isUpdateCardSuccess: false,
+  isDeleteCardSuccess: false,
 };
 
 const boardReducer = (state = INITIAL_STATE, action) => {
@@ -13,6 +14,7 @@ const boardReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isLoading: true,
         isUpdateCardSuccess: false,
+        isDeleteCardSuccess: false,
       };
     case boardActionTypes.GET_ALL_LISTS_SUCCESS:
       let lists = null;
@@ -27,6 +29,12 @@ const boardReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isloading: false,
         isUpdateCardSuccess: true,
+      };
+    case boardActionTypes.DELETE_CARD_SUCCESS:
+      return {
+        ...state,
+        isloading: false,
+        isDeleteCardSuccess: true,
       };
     default:
       return state;

@@ -6,7 +6,10 @@ import { Edit as EditIcon } from '@material-ui/icons';
 import { Delete as DeleteIcon } from '@material-ui/icons';
 import { ConfirmDialog } from '../../../../Reusables/Interactive/ConfirmDialog';
 import { connect } from 'react-redux';
-import { editCard } from '../../../../redux/actions/board';
+import {
+  deleteCard,
+  editCard,
+} from '../../../../redux/actions/board';
 const CardWrapper = styled.div`
   width: 20rem;
   display: flex;
@@ -45,9 +48,11 @@ const CardWrapper = styled.div`
 
 const mapStateToProps = (state) => ({
   isUpdateCardSuccess: state.board.isUpdateCardSuccess,
+  isDeleteCardSuccess: state.board.isDeleteCardSuccess,
   isLoading: state.board.isLoading,
 });
 const mapDispatchToProps = {
+  deleteCard,
   editCard,
 };
 
@@ -58,11 +63,13 @@ export const Card = connect(
   ({
     content,
     like,
-    editCard,
     listID,
     id,
     isUpdateCardSuccess,
+    isDeleteCardSuccess,
     isLoading,
+    editCard,
+    deleteCard,
   }) => {
     const [isEditMode, setIsEditMode] = useState(false);
     const [textField, setTextField] = useState({
@@ -74,6 +81,9 @@ export const Card = connect(
     useEffect(() => {
       if (isUpdateCardSuccess) setIsEditMode(false);
     }, [isUpdateCardSuccess]);
+    useEffect(() => {
+      if (isDeleteCardSuccess) setOpen(false);
+    }, [isDeleteCardSuccess]);
     const handleTextFieldChange = (e) => {
       setTextField((field) => ({ ...field, value: e.target.value }));
     };
@@ -142,10 +152,14 @@ export const Card = connect(
         </CardWrapper>
         <ConfirmDialog
           title="Are you sure you want to delete?"
+          handleAgree={() => {
+            deleteCard(listID, id);
+          }}
           handleClose={() => {
             setOpen(false);
           }}
           open={open}
+          isLoading={isLoading}
         />
       </>
     );

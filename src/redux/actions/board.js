@@ -34,3 +34,11 @@ export const editCard = (listID, cardID, content) => async (
     dispatch({ type: boardActionTypes.UPDATE_CARD_SUCCESS });
   });
 };
+
+export const deleteCard = (listID, cardID) => async (dispatch) => {
+  dispatch({ type: boardActionTypes.BOARD_LOADING });
+  _board.deleteCard(listID, cardID).then((res) => {
+    getAllLists()(dispatch);
+    dispatch({ type: boardActionTypes.DELETE_CARD_SUCCESS });
+  });
+};

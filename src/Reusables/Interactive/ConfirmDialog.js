@@ -11,7 +11,7 @@ export const ConfirmDialog = ({
   handleClose,
   title,
   handleAgree,
-  handleDisagree,
+  isLoading,
 }) => {
   return (
     <Dialog
@@ -24,9 +24,10 @@ export const ConfirmDialog = ({
       <DialogActions>
         <Button
           style={{ textTransform: 'initial' }}
-          onClick={handleDisagree}
+          onClick={handleClose}
           variant="contained"
           color="default"
+          disabled={isLoading}
           autoFocus
         >
           No, thanks!
@@ -36,6 +37,7 @@ export const ConfirmDialog = ({
           onClick={handleAgree}
           variant="contained"
           color="secondary"
+          disabled={isLoading}
         >
           yes, I'm sure!
         </Button>

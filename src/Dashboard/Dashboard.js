@@ -12,7 +12,6 @@ const DashboardWrapper = styled.section`
 
 const mapStateToProps = (state) => ({
   lists: state.board.lists,
-  isLoading: state.board.isLoading,
 });
 const mapDispatchToProps = {
   getAllLists,
@@ -21,21 +20,15 @@ const mapDispatchToProps = {
 export const Dashboard = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(({ lists, getAllLists, isLoading }) => {
-  const [currentList, setLists] = useState([]);
+)(({ lists, getAllLists }) => {
   useEffect(() => {
     getAllLists();
   }, []);
 
-  useEffect(() => {
-    if (JSON.stringify(lists) !== JSON.stringify(currentList))
-      setLists(lists);
-  }, [lists, currentList]);
-
   return (
     <DashboardWrapper>
       <Toolbar />
-      {!isLoading && <Board lists={currentList} />}
+      {<Board lists={lists || []} />}
     </DashboardWrapper>
   );
 });

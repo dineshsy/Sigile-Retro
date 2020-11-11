@@ -14,17 +14,16 @@ const BoardWrapper = styled.div`
 `;
 
 export const Board = ({ lists }) => {
-  console.log(lists);
   return (
     <BoardWrapper>
       {lists?.length
         ? lists.map((list, idx) => {
-            console.log('asd');
             return (
               <List
                 key={`list-${idx}`}
                 title={list.name}
                 cards={list.cards}
+                id={list.id}
               />
             );
           })

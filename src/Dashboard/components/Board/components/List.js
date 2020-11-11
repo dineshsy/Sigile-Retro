@@ -5,6 +5,8 @@ import { Edit as EditIcon } from '@material-ui/icons';
 import { AddCircle as AddCircleIcon } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
 import { Card } from './Card';
+import { connect } from 'react-redux';
+import { addNewCard } from '../../../../redux/actions/board';
 
 const ListWrapper = styled.div`
   width: fit-content;
@@ -13,21 +15,27 @@ const ListWrapper = styled.div`
   gap: 8px;
   margin-top: 2rem;
 `;
+const mapDispatchToProps = {
+  addNewCard,
+};
 
-export const List = ({ title, cards }) => {
+export const List = connect(
+  null,
+  mapDispatchToProps,
+)(({ title, cards, addNewCard, id }) => {
   return (
     <ListWrapper>
       <IconTitle title={title} icon={<EditIcon fontSize="small" />} />
       <IconButton
         aria-label={`add a new card`}
-        onClick={() => {}}
+        onClick={() => addNewCard(id)}
         color="primary"
       >
         <AddCircleIcon fontSize="large" />
       </IconButton>
       {cards?.map((card, idx) => (
-        <Card key={`card-${idx}`} {...card} />
+        <Card listID={id} key={`card-${idx}`} {...card} />
       ))}
     </ListWrapper>
   );
-};
+});

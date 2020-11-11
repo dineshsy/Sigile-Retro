@@ -3,6 +3,7 @@ import boardActionTypes from '../action-types/board';
 const INITIAL_STATE = {
   lists: null,
   isLoading: false,
+  isUpdateCardSuccess: false,
 };
 
 const boardReducer = (state = INITIAL_STATE, action) => {
@@ -11,6 +12,7 @@ const boardReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isLoading: true,
+        isUpdateCardSuccess: false,
       };
     case boardActionTypes.GET_ALL_LISTS_SUCCESS:
       let lists = null;
@@ -19,6 +21,12 @@ const boardReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isLoading: false,
         lists: lists,
+      };
+    case boardActionTypes.UPDATE_CARD_SUCCESS:
+      return {
+        ...state,
+        isloading: false,
+        isUpdateCardSuccess: true,
       };
     default:
       return state;

@@ -14,7 +14,23 @@ export const getAllLists = () => async (dispatch) => {
       });
     });
   } catch (e) {
-    console.log(e);
     dispatch({ type: boardActionTypes.GET_ALL_LISTS_FAIL });
   }
+};
+
+export const addNewCard = (listID) => async (dispatch) => {
+  dispatch({ type: boardActionTypes.BOARD_LOADING });
+  _board.addNewCard(listID).then((res) => {
+    getAllLists()(dispatch);
+  });
+};
+
+export const editCard = (listID, cardID, content) => async (
+  dispatch,
+) => {
+  dispatch({ type: boardActionTypes.BOARD_LOADING });
+  _board.editCard(listID, cardID, content).then((res) => {
+    getAllLists()(dispatch);
+    dispatch({ type: boardActionTypes.UPDATE_CARD_SUCCESS });
+  });
 };

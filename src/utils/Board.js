@@ -14,9 +14,12 @@ class Board {
       const cards = (
         await doc.ref
           .collection('cards')
-
+          .orderBy('createdAt', 'desc')
           .get()
-      ).docs.map((document) => document.data());
+      ).docs.map((document) => ({
+        ...document.data(),
+        id: document.id,
+      }));
 
       return { name, cards, id: doc.id };
     });
@@ -24,9 +27,25 @@ class Board {
     return promises;
   }
 
-  addNewCard(listID, card) {}
+  async addNewCard(listID) {
+    const card = { content: null, like: 0 };
+    return await firestore
+      .collection(this.boradName)
+      .doc(listID)
+      .collection('cards')
+      .add({ ...card, createdAt: timestamp() });
+  }
 
-  editCard(listID, cardID, content) {}
+  async editCard(listID, cardID, content) {
+    return await firestore
+      .collection(this.boradName)
+      .doc(listID)
+      .collection('cards')
+      .doc(cardID)
+      .update({
+        content: content,
+      });
+  }
 
   toggleLike(listID, cardID) {}
 

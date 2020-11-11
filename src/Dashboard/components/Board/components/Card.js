@@ -41,7 +41,7 @@ const CardWrapper = styled.div`
   }
 `;
 
-export const Card = ({ content }) => {
+export const Card = ({ content, like }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [open, setOpen] = useState(false);
   return (
@@ -80,7 +80,7 @@ export const Card = ({ content }) => {
                   color="secondary"
                   label="like card"
                 />
-                12
+                {like}
               </div>
               <ActionItem
                 icon={<EditIcon fontSize="small" />}

@@ -14,7 +14,7 @@ const ListWrapper = styled.div`
   margin-top: 2rem;
 `;
 
-export const List = ({ title }) => {
+export const List = ({ title, cards }) => {
   return (
     <ListWrapper>
       <IconTitle title={title} icon={<EditIcon fontSize="small" />} />
@@ -25,7 +25,9 @@ export const List = ({ title }) => {
       >
         <AddCircleIcon fontSize="large" />
       </IconButton>
-      <Card />
+      {cards?.map((card, idx) => (
+        <Card key={`card-${idx}`} {...card} />
+      ))}
     </ListWrapper>
   );
 };

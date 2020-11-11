@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { List } from './components/List';
+
 const BoardWrapper = styled.div`
   display: grid;
   width: fit-content;
@@ -12,12 +13,22 @@ const BoardWrapper = styled.div`
   min-height: 100%;
 `;
 
-export const Board = () => {
+export const Board = ({ lists }) => {
+  console.log(lists);
   return (
     <BoardWrapper>
-      <List title="What went well?" />
-      <List title="What didn't go well?" />
-      <List title="Action Items" />
+      {lists?.length
+        ? lists.map((list, idx) => {
+            console.log('asd');
+            return (
+              <List
+                key={`list-${idx}`}
+                title={list.name}
+                cards={list.cards}
+              />
+            );
+          })
+        : null}
     </BoardWrapper>
   );
 };

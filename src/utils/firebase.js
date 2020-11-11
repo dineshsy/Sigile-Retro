@@ -15,4 +15,6 @@ export const auth = app.auth();
 export const firestore = app.firestore();
 export const timestamp =
   firebase.firestore.FieldValue.serverTimestamp;
+export const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
+export const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
 export default app;

@@ -1,4 +1,10 @@
-import { timestamp, firestore } from './firebase';
+import {
+  timestamp,
+  firestore,
+  auth,
+  arrayRemove,
+  arrayUnion,
+} from './firebase';
 
 class Board {
   boradName = 'Retrospective';
@@ -24,11 +30,12 @@ class Board {
       return { name, cards, id: doc.id };
     });
 
+    console.log();
     return promises;
   }
 
   async addNewCard(listID) {
-    const card = { content: null, like: 0 };
+    const card = { content: null, like: [] };
     return await firestore
       .collection(this.boradName)
       .doc(listID)
@@ -47,7 +54,28 @@ class Board {
       });
   }
 
-  toggleLike(listID, cardID) {}
+  async toggleLike(listID, cardID, likes) {
+    const uid = auth.currentUser.uid;
+    if (likes.includes(uid)) {
+      return await firestore
+        .collection(this.boradName)
+        .doc(listID)
+        .collection('cards')
+        .doc(cardID)
+        .update({
+          like: arrayRemove(uid),
+        });
+    } else {
+      return await firestore
+        .collection(this.boradName)
+        .doc(listID)
+        .collection('cards')
+        .doc(cardID)
+        .update({
+          like: arrayUnion(uid),
+        });
+    }
+  }
 
   async deleteCard(listID, cardID) {
     return await firestore

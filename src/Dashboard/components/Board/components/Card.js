@@ -9,7 +9,10 @@ import { connect } from 'react-redux';
 import {
   deleteCard,
   editCard,
+  toggleLike,
 } from '../../../../redux/actions/board';
+import { auth } from '../../../../utils/firebase';
+
 const CardWrapper = styled.div`
   width: 20rem;
   display: flex;
@@ -52,6 +55,7 @@ const mapStateToProps = (state) => ({
   isLoading: state.board.isLoading,
 });
 const mapDispatchToProps = {
+  toggleLike,
   deleteCard,
   editCard,
 };
@@ -70,13 +74,21 @@ export const Card = connect(
     isLoading,
     editCard,
     deleteCard,
+    toggleLike,
   }) => {
     const [isEditMode, setIsEditMode] = useState(false);
+    const [isLiked, setIsLiked] = useState(
+      like.includes(auth.currentUser.uid),
+    );
     const [textField, setTextField] = useState({
       error: false,
       hint: null,
       value: '',
     });
+    const handleTextFieldChange = (e) => {
+      setTextField((field) => ({ ...field, value: e.target.value }));
+    };
+
     const [open, setOpen] = useState(false);
     useEffect(() => {
       if (isUpdateCardSuccess) setIsEditMode(false);
@@ -84,9 +96,9 @@ export const Card = connect(
     useEffect(() => {
       if (isDeleteCardSuccess) setOpen(false);
     }, [isDeleteCardSuccess]);
-    const handleTextFieldChange = (e) => {
-      setTextField((field) => ({ ...field, value: e.target.value }));
-    };
+    useEffect(() => {
+      if (like) setIsLiked(like.includes(auth.currentUser.uid));
+    }, [like]);
 
     return (
       <>
@@ -123,10 +135,14 @@ export const Card = connect(
                 <div className="like-wrapper">
                   <ActionItem
                     icon={<ThumbUpIcon fontSize="small" />}
-                    color="secondary"
+                    color={isLiked ? 'secondary' : 'default'}
                     label="like card"
+                    handleClick={() => {
+                      setIsLiked(!isLiked);
+                      toggleLike(listID, id, like);
+                    }}
                   />
-                  {like}
+                  {like.length}
                 </div>
                 <ActionItem
                   icon={<EditIcon fontSize="small" />}

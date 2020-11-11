@@ -18,16 +18,14 @@ export const getAllLists = () => async (dispatch) => {
   }
 };
 
-export const addNewCard = (listID) => async (dispatch) => {
+export const addNewCard = (listID) => (dispatch) => {
   dispatch({ type: boardActionTypes.BOARD_LOADING });
   _board.addNewCard(listID).then((res) => {
     getAllLists()(dispatch);
   });
 };
 
-export const editCard = (listID, cardID, content) => async (
-  dispatch,
-) => {
+export const editCard = (listID, cardID, content) => (dispatch) => {
   dispatch({ type: boardActionTypes.BOARD_LOADING });
   _board.editCard(listID, cardID, content).then((res) => {
     getAllLists()(dispatch);
@@ -35,10 +33,17 @@ export const editCard = (listID, cardID, content) => async (
   });
 };
 
-export const deleteCard = (listID, cardID) => async (dispatch) => {
+export const deleteCard = (listID, cardID) => (dispatch) => {
   dispatch({ type: boardActionTypes.BOARD_LOADING });
   _board.deleteCard(listID, cardID).then((res) => {
     getAllLists()(dispatch);
     dispatch({ type: boardActionTypes.DELETE_CARD_SUCCESS });
+  });
+};
+
+export const toggleLike = (listID, cardID, likes) => (dispatch) => {
+  dispatch({ type: boardActionTypes.BOARD_LOADING });
+  _board.toggleLike(listID, cardID, likes).then((res) => {
+    getAllLists()(dispatch);
   });
 };

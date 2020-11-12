@@ -12,7 +12,12 @@ import Card from '@material-ui/core/Card';
 import MicrosoftIcon from '../../Assets/SocialIcons/microsoft.png';
 import GoogleIcon from '../../Assets/SocialIcons/google.png';
 import FacebookIcon from '../../Assets/SocialIcons/facebook.png';
-import { userLogIn } from '../../redux/actions/authentication';
+import {
+  userLogIn,
+  googleSignIn,
+  facebookSignIn,
+  microsoftSignIn,
+} from '../../redux/actions/authentication';
 import { connect } from 'react-redux';
 import { IconButton, InputAdornment } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
@@ -49,12 +54,21 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   userLogIn,
+  googleSignIn,
+  facebookSignIn,
+  microsoftSignIn,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(function SignIn({ isLoading, userLogIn }) {
+)(function SignIn({
+  isLoading,
+  userLogIn,
+  googleSignIn,
+  facebookSignIn,
+  microsoftSignIn,
+}) {
   const classes = useStyles();
   const [userDetails, setUserDetails] = useState({
     email: '',
@@ -152,6 +166,8 @@ export default connect(
             <Grid container justify="center" spacing={1}>
               <Grid item xs={8}>
                 <Button
+                  disabled={isLoading}
+                  onClick={facebookSignIn}
                   variant="contained"
                   fullWidth
                   startIcon={
@@ -164,6 +180,8 @@ export default connect(
               </Grid>
               <Grid item xs={8}>
                 <Button
+                  disabled={isLoading}
+                  onClick={googleSignIn}
                   fullWidth
                   variant="contained"
                   startIcon={
@@ -176,6 +194,8 @@ export default connect(
               </Grid>
               <Grid item xs={8}>
                 <Button
+                  disabled={isLoading}
+                  onClick={microsoftSignIn}
                   fullWidth
                   variant="contained"
                   startIcon={

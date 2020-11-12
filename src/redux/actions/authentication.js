@@ -42,3 +42,26 @@ export const userLogOut = () => async (dispatch) => {
     dispatch({ type: authActionTypes.LOGOUT_FAIL });
   }
 };
+
+export const googleSignIn = () => (dispatch) => {
+  dispatch({ type: authActionTypes.AUTH_LOADING });
+  _auth.signInWithGoogle().catch((err) => {
+    dispatch({ type: authActionTypes.SIGNUP_FAIL });
+  });
+};
+
+export const facebookSignIn = () => (dispatch) => {
+  dispatch({ type: authActionTypes.AUTH_LOADING });
+  _auth.signInWithFacebook().catch((err) => {
+    console.log(err);
+    dispatch({ type: authActionTypes.SIGNUP_FAIL });
+  });
+};
+
+export const microsoftSignIn = () => (dispatch) => {
+  dispatch({ type: authActionTypes.AUTH_LOADING });
+  _auth.signInWithMicrosoft().catch((err) => {
+    console.log(err);
+    dispatch({ type: authActionTypes.SIGNUP_FAIL });
+  });
+};

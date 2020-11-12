@@ -1,4 +1,9 @@
-import { auth } from './firebase';
+import {
+  auth,
+  facebookProvider,
+  googleProvider,
+  microsoftProvider,
+} from './firebase';
 
 class Authentication {
   signup(email, password) {
@@ -12,6 +17,15 @@ class Authentication {
   logout() {
     return auth.signOut();
   }
+  signInWithGoogle = () => {
+    return auth.signInWithPopup(googleProvider);
+  };
+  signInWithFacebook = () => {
+    return auth.signInWithPopup(facebookProvider);
+  };
+  signInWithMicrosoft = () => {
+    return auth.signInWithPopup(microsoftProvider);
+  };
 }
 
 export default Authentication;

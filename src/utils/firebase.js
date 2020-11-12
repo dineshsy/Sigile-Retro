@@ -17,4 +17,10 @@ export const timestamp =
   firebase.firestore.FieldValue.serverTimestamp;
 export const arrayRemove = firebase.firestore.FieldValue.arrayRemove;
 export const arrayUnion = firebase.firestore.FieldValue.arrayUnion;
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
+export const facebookProvider = new firebase.auth.FacebookAuthProvider();
+export const microsoftProvider = new firebase.auth.OAuthProvider(
+  'microsoft.com',
+);
+
 export default app;

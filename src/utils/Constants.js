@@ -7,5 +7,6 @@ export const errorCodes = {
   auth: {
     wrongPassword: 'auth/wrong-password',
     userNotFound: 'auth/user-not-found',
+    userExists: 'auth/email-already-in-use',
   },
 };

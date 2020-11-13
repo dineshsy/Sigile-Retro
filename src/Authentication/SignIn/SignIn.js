@@ -21,7 +21,7 @@ import {
 import { connect } from 'react-redux';
 import { IconButton, InputAdornment } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { errorCodes } from '../../utils/Constants';
+import { errorCodes, validateEmail } from '../../utils/Constants';
 import { resolveError } from '../../redux/actions/error';
 
 const useStyles = makeStyles((theme) => ({
@@ -91,8 +91,9 @@ export default connect(
 
   useEffect(() => {
     if (
+      error.isError &&
       [
-        error.isError && errorCodes.auth.wrongPassword,
+        errorCodes.auth.wrongPassword,
         errorCodes.auth.userNotFound,
       ].includes(error.code)
     ) {
@@ -148,8 +149,27 @@ export default connect(
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    resolveError();
-    userLogIn(userDetails.email.value, userDetails.password.value);
+    if (!validateEmail(userDetails.email.value)) {
+      setUserDetails({
+        ...userDetails,
+        email: {
+          ...userDetails.email,
+          error: true,
+          hint: 'Enter a valid Email',
+        },
+      });
+    } else {
+      resolveError();
+      setUserDetails({
+        ...userDetails,
+        email: {
+          ...userDetails.email,
+          error: null,
+          hint: null,
+        },
+      });
+      userLogIn(userDetails.email.value, userDetails.password.value);
+    }
   };
   return (
     <Card className={classes.root}>

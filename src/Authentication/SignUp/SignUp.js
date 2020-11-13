@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -23,7 +23,8 @@ import {
 } from '../../redux/actions/authentication';
 import { IconButton, InputAdornment } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { validateEmail } from '../../utils/Constants';
+import { errorCodes, validateEmail } from '../../utils/Constants';
+import { resolveError } from '../../redux/actions/error';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const mapStateToProps = (state) => ({
   isLoading: state.auth.isLoading,
+  error: state.error,
 });
 
 const mapDispatchToProps = {
@@ -60,6 +62,7 @@ const mapDispatchToProps = {
   googleSignIn,
   facebookSignIn,
   microsoftSignIn,
+  resolveError,
 };
 
 export default connect(
@@ -71,7 +74,36 @@ export default connect(
   googleSignIn,
   facebookSignIn,
   microsoftSignIn,
+  error,
+  resolveError,
 }) {
+  useEffect(() => {
+    if (error.code === errorCodes.auth.userExists) {
+      setUserDetails({
+        ...userDetails,
+        email: {
+          ...userDetails.email,
+          error: true,
+          hint: error.message,
+        },
+      });
+    } else {
+      setUserDetails({
+        ...userDetails,
+        password: {
+          ...userDetails.password,
+          error: null,
+          hint: null,
+        },
+        email: {
+          ...userDetails.email,
+          error: null,
+          hint: null,
+        },
+      });
+    }
+  }, [error]);
+
   const classes = useStyles();
   const [userDetails, setUserDetails] = useState({
     email: {
@@ -114,6 +146,7 @@ export default connect(
         },
       });
     } else {
+      resolveError();
       setUserDetails({
         ...userDetails,
         email: {

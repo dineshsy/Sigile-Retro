@@ -1,6 +1,6 @@
 import authActionTypes from '../action-types/authentication';
 import Authentication from '../../utils/Authentication';
-
+import errorTypes from '../action-types/errorTypes';
 const _auth = new Authentication();
 
 export const loadUser = () => (dispatch) => {
@@ -16,7 +16,7 @@ export const userSignUp = (email, password) => async (dispatch) => {
   try {
     await _auth.signup(email, password);
   } catch (e) {
-    console.log(e);
+    dispatch({ type: errorTypes.ERROR_OCCURRED, payload: e });
     dispatch({ type: authActionTypes.SIGNUP_FAIL });
   }
 };
@@ -26,7 +26,8 @@ export const userLogIn = (email, password) => async (dispatch) => {
   try {
     await _auth.login(email, password);
   } catch (e) {
-    console.log(e);
+    dispatch({ type: errorTypes.ERROR_OCCURRED, payload: e });
+
     dispatch({ type: authActionTypes.LOGIN_FAIL });
   }
 };
@@ -45,23 +46,25 @@ export const userLogOut = () => async (dispatch) => {
 
 export const googleSignIn = () => (dispatch) => {
   dispatch({ type: authActionTypes.AUTH_LOADING });
-  _auth.signInWithGoogle().catch((err) => {
+  _auth.signInWithGoogle().catch((e) => {
+    dispatch({ type: errorTypes.ERROR_OCCURRED, payload: e });
+
     dispatch({ type: authActionTypes.SIGNUP_FAIL });
   });
 };
 
 export const facebookSignIn = () => (dispatch) => {
   dispatch({ type: authActionTypes.AUTH_LOADING });
-  _auth.signInWithFacebook().catch((err) => {
-    console.log(err);
+  _auth.signInWithFacebook().catch((e) => {
+    dispatch({ type: errorTypes.ERROR_OCCURRED, payload: e });
     dispatch({ type: authActionTypes.SIGNUP_FAIL });
   });
 };
 
 export const microsoftSignIn = () => (dispatch) => {
   dispatch({ type: authActionTypes.AUTH_LOADING });
-  _auth.signInWithMicrosoft().catch((err) => {
-    console.log(err);
+  _auth.signInWithMicrosoft().catch((e) => {
+    dispatch({ type: errorTypes.ERROR_OCCURRED, payload: e });
     dispatch({ type: authActionTypes.SIGNUP_FAIL });
   });
 };

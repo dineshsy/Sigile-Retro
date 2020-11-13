@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -21,6 +21,8 @@ import {
 import { connect } from 'react-redux';
 import { IconButton, InputAdornment } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { errorCodes } from '../../utils/Constants';
+import { resolveError } from '../../redux/actions/error';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const mapStateToProps = (state) => ({
   isLoading: state.auth.isLoading,
+  error: state.error,
 });
 
 const mapDispatchToProps = {
@@ -57,6 +60,7 @@ const mapDispatchToProps = {
   googleSignIn,
   facebookSignIn,
   microsoftSignIn,
+  resolveError,
 };
 
 export default connect(
@@ -64,20 +68,73 @@ export default connect(
   mapDispatchToProps,
 )(function SignIn({
   isLoading,
+  error,
   userLogIn,
   googleSignIn,
   facebookSignIn,
   microsoftSignIn,
+  resolveError,
 }) {
   const classes = useStyles();
   const [userDetails, setUserDetails] = useState({
-    email: '',
-    password: '',
+    email: {
+      error: null,
+      hint: null,
+      value: '',
+    },
+    password: {
+      error: null,
+      hint: null,
+      value: '',
+    },
   });
+
+  useEffect(() => {
+    if (
+      [
+        error.isError && errorCodes.auth.wrongPassword,
+        errorCodes.auth.userNotFound,
+      ].includes(error.code)
+    ) {
+      if (error.code === errorCodes.auth.wrongPassword) {
+        setUserDetails({
+          ...userDetails,
+          password: {
+            ...userDetails.password,
+            error: true,
+            hint: error.message,
+          },
+        });
+      } else if (error.code === errorCodes.auth.userNotFound) {
+        setUserDetails({
+          ...userDetails,
+          email: {
+            ...userDetails.email,
+            error: true,
+            hint: error.message,
+          },
+        });
+      }
+    } else {
+      setUserDetails({
+        ...userDetails,
+        password: {
+          ...userDetails.password,
+          error: null,
+          hint: null,
+        },
+        email: {
+          ...userDetails.email,
+          error: null,
+          hint: null,
+        },
+      });
+    }
+  }, [error]);
   const [showPassword, setShowPassword] = useState(false);
   const handleTextFieldChange = (e) => {
     const updatedUserDetails = { ...userDetails };
-    updatedUserDetails[e.target.name] = e.target.value;
+    updatedUserDetails[e.target.name].value = e.target.value;
     setUserDetails(updatedUserDetails);
   };
 
@@ -91,7 +148,8 @@ export default connect(
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    userLogIn(userDetails.email, userDetails.password);
+    resolveError();
+    userLogIn(userDetails.email.value, userDetails.password.value);
   };
   return (
     <Card className={classes.root}>
@@ -111,6 +169,8 @@ export default connect(
                   variant="standard"
                   required
                   fullWidth
+                  error={userDetails.email.error}
+                  helperText={userDetails.email.hint}
                   id="email"
                   label="Email Address"
                   name="email"
@@ -123,6 +183,8 @@ export default connect(
                 <TextField
                   variant="standard"
                   required
+                  error={userDetails.password.error}
+                  helperText={userDetails.password.hint}
                   fullWidth
                   name="password"
                   label="Password"

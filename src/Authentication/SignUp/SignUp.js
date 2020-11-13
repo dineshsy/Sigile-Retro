@@ -23,6 +23,7 @@ import {
 } from '../../redux/actions/authentication';
 import { IconButton, InputAdornment } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { validateEmail } from '../../utils/Constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,8 +74,16 @@ export default connect(
 }) {
   const classes = useStyles();
   const [userDetails, setUserDetails] = useState({
-    email: '',
-    password: '',
+    email: {
+      error: null,
+      hint: null,
+      value: '',
+    },
+    password: {
+      error: null,
+      hint: null,
+      value: '',
+    },
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -89,13 +98,32 @@ export default connect(
 
   const handleTextFieldChange = (e) => {
     const updatedUserDetails = { ...userDetails };
-    updatedUserDetails[e.target.name] = e.target.value;
+    updatedUserDetails[e.target.name].value = e.target.value;
     setUserDetails(updatedUserDetails);
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    userSignUp(userDetails.email, userDetails.password);
+    if (!validateEmail(userDetails.email.value)) {
+      setUserDetails({
+        ...userDetails,
+        email: {
+          ...userDetails.email,
+          error: true,
+          hint: 'Enter a valid Email',
+        },
+      });
+    } else {
+      setUserDetails({
+        ...userDetails,
+        email: {
+          ...userDetails.email,
+          error: null,
+          hint: null,
+        },
+      });
+      userSignUp(userDetails.email.value, userDetails.password.value);
+    }
   };
   return (
     <Card className={classes.root}>
@@ -126,6 +154,8 @@ export default connect(
               <Grid item xs={12}>
                 <TextField
                   variant="standard"
+                  error={userDetails.email.error}
+                  helperText={userDetails.email.hint}
                   required
                   fullWidth
                   id="email"
@@ -171,6 +201,7 @@ export default connect(
                     <Checkbox
                       value="allowExtraEmails"
                       color="primary"
+                      required
                     />
                   }
                   label="Agree to Term & Conditions"
